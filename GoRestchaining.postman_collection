@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "76306710-2736-4696-a236-62254f7c965b",
+		"name": "Go Rest chaining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25861522"
+	},
+	"item": [
+		{
+			"name": "Create Record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonfile=JSON.parse(responseBody)\r",
+							"pm.environment.set(\"id_env\",jsonfile.id)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var random= Math.random().toString(36).substring(2);\r",
+							"var user_name=\"Test\"+random;\r",
+							"var email_name=\"Test\"+random+\"@gmail.com\";\r",
+							"\r",
+							"pm.environment.set(\"email_env\",email_name);\r",
+							"pm.environment.set(\"name_env\",user_name)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{name_env}}\",\r\n    \"email\": \"{{email_env}}\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"active\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{go_rest_url}}/public/v2/users",
+					"host": [
+						"{{go_rest_url}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Jsondata=pm.response.json();\r",
+							"pm.test(\"This is pass\",()=>{\r",
+							"    pm.expect(Jsondata.id).to.eql(pm.environment.get(\"id_env\"))\r",
+							"    pm.expect(Jsondata.name).to.eql(pm.environment.get(\"name_env\"))\r",
+							"    pm.expect(Jsondata.email).to.eql(pm.environment.get(\"email_env\"))\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{go_rest_url}}/public/v2/users/{{id_env}}",
+					"host": [
+						"{{go_rest_url}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{id_env}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Record",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var update_random=Math.random().toString(32).substring(3)\r",
+							"var update_name=\"Sample\"+update_random\r",
+							"var update_email=\"Sample\"+update_random+\"@mailinator.com\"\r",
+							"\r",
+							"pm.environment.set(\"updated_name\",update_name)\r",
+							"pm.environment.set(\"updated_email\",update_email)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{updated_name}}\",\r\n    \"email\": \"{{updated_email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{go_rest_url}}/public/v2/users/{{id_env}}",
+					"host": [
+						"{{go_rest_url}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{id_env}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.unset(\"id_env\")\r",
+							"pm.environment.unset(\"name_env\")\r",
+							"pm.environment.unset(\"email_env\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{go_rest_url}}/public/v2/users/{{id_env}}",
+					"host": [
+						"{{go_rest_url}}"
+					],
+					"path": [
+						"public",
+						"v2",
+						"users",
+						"{{id_env}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "011390cbf722510103216973002d24dbe638f25dcdf992ca63c91b53f7091cb3",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "go_rest_url",
+			"value": "https://gorest.co.in"
+		}
+	]
+}
